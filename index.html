@@ -3,239 +3,623 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PacheKing Hub - Centro de Control</title>
+    <title>PacheKing Hub - Mission Control</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #090d16;
-            --card-bg: rgba(22, 29, 47, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --card-hover: rgba(33, 44, 71, 0.9);
-            --primary: #3b82f6;
-            --accent-green: #10b981;
+            --bg: #07090e;
+            --card-bg: rgba(15, 20, 31, 0.85);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --card-hover: rgba(23, 31, 48, 0.95);
+            --cyan: #00f2fe;
+            --purple: #8b5cf6;
+            --amber: #f59e0b;
+            --green: #10b981;
+            --blue: #3b82f6;
+            --red: #ef4444;
             --text-main: #f8fafc;
-            --text-sub: #94a3b8;
+            --text-sub: #818cf8;
+            --text-muted: #64748b;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Plus Jakarta Sans", sans-serif; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
         body {
             background-color: var(--bg);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.12) 0px, transparent 50%);
             color: var(--text-main);
             min-height: 100vh;
+            padding: 2.5rem 2rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 3rem 1.5rem;
         }
-        .container { width: 100%; max-width: 1100px; }
-        header { text-align: center; margin-bottom: 3.5rem; }
-        .badge {
-            display: inline-flex;
+
+        .container {
+            width: 100%;
+            max-width: 1250px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.35rem 0.85rem;
-            border-radius: 9999px;
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--accent-green);
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            box-shadow: 0 0 10px var(--accent-green);
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.9); }
-        }
-        h1 {
-            font-size: 2.8rem;
+
+        .header-title h1 {
+            font-size: 2.2rem;
             font-weight: 800;
             letter-spacing: -0.03em;
-            margin-bottom: 0.75rem;
             background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        p.subtitle { color: var(--text-sub); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.25rem;
         }
-        .card {
+
+        .badge-live {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: var(--green);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        /* 1. TOP METRICS ROW */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 1.75rem;
+        }
+
+        @media (max-width: 1024px) {
+            .metrics-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .metric-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 1.25rem;
-            padding: 2rem;
-            text-decoration: none;
-            color: inherit;
+            border-radius: 1.1rem;
+            padding: 1.4rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(12px);
             position: relative;
+        }
+
+        .metric-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .metric-title {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-icon {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .metric-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+        }
+
+        .metric-sub {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            margin-top: 0.75rem;
             overflow: hidden;
         }
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, transparent, transparent);
-            transition: all 0.3s;
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.5s ease-out;
         }
-        .card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(255, 255, 255, 0.2);
-            background: var(--card-hover);
-            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
-        }
-        .card.ariang:hover::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-        .card.metube:hover::before { background: linear-gradient(90deg, #ef4444, #f87171); }
-        .card.filebrowser:hover::before { background: linear-gradient(90deg, #10b981, #34d399); }
-        .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-        .icon-box {
-            width: 54px; height: 54px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem;
-        }
-        .icon-box.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-        .icon-box.red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-        .icon-box.green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .card-badge {
-            font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 6px;
-            background: rgba(255, 255, 255, 0.05); color: var(--text-sub); font-weight: 600;
-        }
-        .card h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .card p { color: var(--text-sub); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; }
-        .card-action { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.9rem; color: var(--primary); }
-        .card:hover .card-action svg { transform: translateX(4px); }
-        .card-action svg { transition: transform 0.2s; }
-        .system-info {
+
+        .bar-cyan { background: linear-gradient(90deg, #00f2fe, #4facfe); }
+        .bar-purple { background: linear-gradient(90deg, #8b5cf6, #c084fc); }
+        .bar-amber { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .bar-green { background: linear-gradient(90deg, #10b981, #34d399); }
+        .bar-blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+
+        /* 2. SECTION CARDS */
+        .section-box {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 1.25rem;
-            padding: 1.75rem 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
+            padding: 1.75rem;
+            margin-bottom: 1.75rem;
             backdrop-filter: blur(12px);
         }
-        .info-item { display: flex; flex-direction: column; gap: 0.25rem; }
-        .info-label { font-size: 0.8rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-        .info-val { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
-        .token-box {
-            display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.3);
-            padding: 0.4rem 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);
-            font-family: monospace; font-size: 0.85rem; color: #cbd5e1; cursor: pointer; transition: all 0.2s;
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
         }
-        .token-box:hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.5); }
-        footer { margin-top: 3rem; color: var(--text-sub); font-size: 0.85rem; text-align: center; }
+
+        .section-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .section-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+
+        .section-link {
+            color: var(--amber);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: opacity 0.2s;
+        }
+
+        .section-link:hover { opacity: 0.8; }
+
+        /* DOWNLOAD ITEM */
+        .download-item {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.85rem;
+            padding: 1.1rem 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .download-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+
+        .download-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 999px;
+            margin-bottom: 0.6rem;
+            overflow: hidden;
+        }
+
+        .download-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f2fe, #3b82f6);
+            border-radius: 999px;
+            transition: width 0.4s ease;
+        }
+
+        .download-bottom {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* 3. SERVICES GRID */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .service-card {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.9rem;
+            padding: 1.25rem 1.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s;
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .service-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .service-port {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .service-status {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.3rem 0.65rem;
+            border-radius: 999px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .service-status.offline {
+            color: var(--red);
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* 4. FOOTER CREDENTIALS */
+        .credentials-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            padding: 1.1rem 1.6rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .cred-item strong {
+            color: var(--text-main);
+        }
+
+        .token-chip {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-family: monospace;
+            color: #cbd5e1;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .token-chip:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- HEADER -->
         <header>
-            <div class="badge">
-                <span class="status-dot"></span>
-                <span>PacheKing Station Online</span>
+            <div class="header-title">
+                <h1>PacheKing Hub</h1>
+                <p>Estación Automatizada de Descargas y Procesamiento hacia Google Drive</p>
             </div>
-            <h1>PacheKing Hub</h1>
-            <p class="subtitle">Panel unificado de descargas, streaming y procesamiento automatizado a Google Drive</p>
+            <div class="badge-live">
+                <span class="status-dot"></span>
+                <span>Oracle ARM64 &bull; PacheKing Online</span>
+            </div>
         </header>
 
-        <div class="grid">
-            <a href="https://eye-tucson-thread-assured.trycloudflare.com" target="_blank" class="card ariang">
-                <div>
-                    <div class="card-top">
-                        <div class="icon-box blue">⚡</div>
-                        <span class="card-badge">Aria2-Pro</span>
-                    </div>
-                    <h2>AriaNg</h2>
-                    <p>Gestor multihilo para descargas directas HTTP/FTP, BitTorrent y enlaces Magnet a máxima velocidad.</p>
+        <!-- TOP METRICS (5 TILES EXACTLY AS USER SCREENSHOT) -->
+        <div class="metrics-row">
+            <!-- 1. CPU -->
+            <div class="metric-card">
+                <div class="metric-top">
+                    <span class="metric-title">Uso CPU</span>
+                    <span class="metric-icon">💻</span>
                 </div>
-                <div class="card-action">
-                    Abrir AriaNg
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
+                <div class="metric-val" id="cpu-val">2.1%</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bar-cyan" id="cpu-bar" style="width: 2.1%;"></div>
                 </div>
-            </a>
+            </div>
 
-            <a href="https://privacy-responsibilities-buttons-frankfurt.trycloudflare.com" target="_blank" class="card metube">
-                <div>
-                    <div class="card-top">
-                        <div class="icon-box red">🎬</div>
-                        <span class="card-badge">yt-dlp Engine</span>
-                    </div>
-                    <h2>MeTube</h2>
-                    <p>Descarga de videos en máxima resolución (4K/1080p) y extracción de audio MP3 de YouTube y redes sociales.</p>
+            <!-- 2. RAM -->
+            <div class="metric-card">
+                <div class="metric-top">
+                    <span class="metric-title">Memoria RAM</span>
+                    <span class="metric-icon">📈</span>
                 </div>
-                <div class="card-action">
-                    Abrir MeTube
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
+                <div class="metric-val" id="ram-pct">8.4%</div>
+                <div class="metric-sub">
+                    <span id="ram-used">1.5 GB</span>
+                    <span id="ram-total">/ 17.5 GB</span>
                 </div>
-            </a>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bar-purple" id="ram-bar" style="width: 8.4%;"></div>
+                </div>
+            </div>
 
-            <a href="https://leaving-velvet-period-mind.trycloudflare.com" target="_blank" class="card filebrowser">
-                <div>
-                    <div class="card-top">
-                        <div class="icon-box green">📁</div>
-                        <span class="card-badge">Web Explorer</span>
-                    </div>
-                    <h2>FileBrowser</h2>
-                    <p>Explorador de archivos, reproductor de video/música integrado y gestor del almacenamiento local.</p>
+            <!-- 3. DISK -->
+            <div class="metric-card">
+                <div class="metric-top">
+                    <span class="metric-title">Disco VPS Local</span>
+                    <span class="metric-icon">💾</span>
                 </div>
-                <div class="card-action">
-                    Abrir FileBrowser
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
+                <div class="metric-val" id="disk-pct">6.1%</div>
+                <div class="metric-sub">
+                    <span id="disk-used">8.8 GB</span>
+                    <span id="disk-total">/ 144.3 GB</span>
                 </div>
-            </a>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bar-amber" id="disk-bar" style="width: 6.1%;"></div>
+                </div>
+            </div>
+
+            <!-- 4. GOOGLE DRIVE -->
+            <div class="metric-card">
+                <div class="metric-top">
+                    <span class="metric-title">Google Drive Nube</span>
+                    <span class="metric-icon">☁️</span>
+                </div>
+                <div class="metric-val" style="color: var(--green);">Activo</div>
+                <div class="metric-sub">
+                    <span>Auto-Sync Hook</span>
+                    <span>gdrive:Descargas/</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bar-green" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- 5. ORACLE OUTBOUND -->
+            <div class="metric-card">
+                <div class="metric-top">
+                    <span class="metric-title">Subida Oracle</span>
+                    <span class="metric-icon">🌐</span>
+                </div>
+                <div class="metric-val" id="net-val">0.1 GB</div>
+                <div class="metric-sub">
+                    <span id="net-pct">1% usado</span>
+                    <span>Restan 10 TB</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bar-blue" id="net-bar" style="width: 1%;"></div>
+                </div>
+            </div>
         </div>
 
-        <div class="system-info">
-            <div class="info-item">
-                <span class="info-label">Instancia</span>
-                <span class="info-val">PacheKing (ARM64)</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Pipeline Automático</span>
-                <span class="info-val" style="color: var(--accent-green);">Auto-Unzip & GDrive Sync</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Aria2 RPC Secret</span>
-                <div class="token-box" onclick="navigator.clipboard.writeText(\x271d0d8b3a3a52f684e6740180b134d6d8\x27); alert(\x27Token copiado al portapapeles\x27);" title="Click para copiar">
-                    <span>1d0d8b3a...</span>
-                    <span>📋</span>
+        <!-- 2. DESCARGAS EN TIEMPO REAL -->
+        <div class="section-box">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <div class="section-icon-circle">⬇️</div>
+                    <span class="section-title">Descargas en Tiempo Real</span>
+                    <span class="section-sub" id="downloads-summary">Aria2-Pro Engine &bull; Multihilo</span>
                 </div>
+                <a href="https://eye-tucson-thread-assured.trycloudflare.com" target="_blank" class="section-link">
+                    Abrir AriaNg <span>&rsaquo;</span>
+                </a>
             </div>
-            <div class="info-item">
-                <span class="info-label">FileBrowser Login</span>
-                <span class="info-val">admin / admin</span>
+
+            <div id="downloads-container">
+                <div class="download-item">
+                    <div class="download-top">
+                        <span>PacheKing Autonomous Engine Ready</span>
+                        <span style="color: var(--cyan);">100%</span>
+                    </div>
+                    <div class="download-bar">
+                        <div class="download-fill" style="width: 100%;"></div>
+                    </div>
+                    <div class="download-bottom">
+                        <span>Esperando descargas desde AriaNg o MeTube</span>
+                        <span>Velocidad: 0 B/s &bull; Auto-Unzip habilitado</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <footer>
-            PacheKing Autonomous Station &bull; Orquestado con Docker Compose &bull; Cloudflare Tunnel
-        </footer>
+        <!-- 3. ESTADO DE LOS SERVICIOS PACHEKING -->
+        <div class="section-box">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <span class="section-title">Estado de los Servicios PacheKing</span>
+                </div>
+                <span class="section-sub">Auto-refresh cada 3s</span>
+            </div>
+
+            <div class="services-grid">
+                <!-- AriaNg -->
+                <a href="https://eye-tucson-thread-assured.trycloudflare.com" target="_blank" class="service-card">
+                    <div>
+                        <div class="service-name">AriaNg</div>
+                        <div class="service-port">Puerto 6880 (Aria2 RPC 6800)</div>
+                    </div>
+                    <div class="service-status">
+                        <span class="status-dot"></span>
+                        <span>Online</span>
+                    </div>
+                </a>
+
+                <!-- MeTube -->
+                <a href="https://privacy-responsibilities-buttons-frankfurt.trycloudflare.com" target="_blank" class="service-card">
+                    <div>
+                        <div class="service-name">MeTube</div>
+                        <div class="service-port">Puerto 8081 (YouTube & Media)</div>
+                    </div>
+                    <div class="service-status">
+                        <span class="status-dot"></span>
+                        <span>Online</span>
+                    </div>
+                </a>
+
+                <!-- FileBrowser -->
+                <a href="https://leaving-velvet-period-mind.trycloudflare.com" target="_blank" class="service-card">
+                    <div>
+                        <div class="service-name">FileBrowser</div>
+                        <div class="service-port">Puerto 8080 (Gestor Web)</div>
+                    </div>
+                    <div class="service-status">
+                        <span class="status-dot"></span>
+                        <span>Online</span>
+                    </div>
+                </a>
+
+                <!-- Google Drive Sync -->
+                <div class="service-card" style="cursor: default;">
+                    <div>
+                        <div class="service-name">GDrive Pipeline</div>
+                        <div class="service-port">upload_to_gdrive.sh</div>
+                    </div>
+                    <div class="service-status">
+                        <span class="status-dot"></span>
+                        <span>Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. CREDENTIALS & INFO -->
+        <div class="credentials-bar">
+            <div class="cred-item">
+                <span>Instancia: <strong>PacheKing</strong> (Ubuntu 24.04 ARM64)</span>
+            </div>
+            <div class="cred-item">
+                <span>Aria2 RPC Secret: </span>
+                <span class="token-chip" onclick="navigator.clipboard.writeText('1d0d8b3a3a52f684e6740180b134d6d8'); alert('Token Aria2 copiado');" title="Click para copiar">1d0d8b3a... 📋</span>
+            </div>
+            <div class="cred-item">
+                <span>FileBrowser Login: <strong>admin / admin</strong></span>
+            </div>
+        </div>
     </div>
+
+    <script>
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/stats');
+                if (!res.ok) return;
+                const data = await res.json();
+
+                // CPU
+                document.getElementById('cpu-val').innerText = data.cpu.percent + '%';
+                document.getElementById('cpu-bar').style.width = data.cpu.percent + '%';
+
+                // RAM
+                document.getElementById('ram-pct').innerText = data.ram.percent + '%';
+                document.getElementById('ram-used').innerText = data.ram.used + ' GB';
+                document.getElementById('ram-total').innerText = '/ ' + data.ram.total + ' GB';
+                document.getElementById('ram-bar').style.width = data.ram.percent + '%';
+
+                // DISK
+                document.getElementById('disk-pct').innerText = data.disk.percent + '%';
+                document.getElementById('disk-used').innerText = data.disk.used + ' GB';
+                document.getElementById('disk-total').innerText = '/ ' + data.disk.total + ' GB';
+                document.getElementById('disk-bar').style.width = data.disk.percent + '%';
+
+                // NETWORK OUT
+                document.getElementById('net-val').innerText = data.oracle_out.used_gb + ' GB';
+
+                // DOWNLOADS
+                const cont = document.getElementById('downloads-container');
+                if (data.downloads && data.downloads.length > 0) {
+                    cont.innerHTML = '';
+                    data.downloads.forEach(dl => {
+                        cont.innerHTML += `
+                            <div class="download-item">
+                                <div class="download-top">
+                                    <span>${dl.name}</span>
+                                    <span style="color: var(--cyan);">${dl.progress}%</span>
+                                </div>
+                                <div class="download-bar">
+                                    <div class="download-fill" style="width: ${dl.progress}%;"></div>
+                                </div>
+                                <div class="download-bottom">
+                                    <span>${dl.size} &bull; ${dl.speed}</span>
+                                    <span>ETA: ${dl.eta}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (e) {
+                console.log("Stats poll error: ", e);
+            }
+        }
+
+        setInterval(fetchStats, 3000);
+        fetchStats();
+    </script>
 </body>
 </html>
