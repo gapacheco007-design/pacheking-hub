@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PacheKing Hub - Centro de Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090d16;
+            --card-bg: rgba(22, 29, 47, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-hover: rgba(33, 44, 71, 0.9);
+            --primary: #3b82f6;
+            --accent-green: #10b981;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Plus Jakarta Sans", sans-serif; }
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 1.5rem;
+        }
+        .container { width: 100%; max-width: 1100px; }
+        header { text-align: center; margin-bottom: 3.5rem; }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-green);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.9); }
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        p.subtitle { color: var(--text-sub); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, transparent);
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: var(--card-hover);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .card.ariang:hover::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .card.metube:hover::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .card.filebrowser:hover::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+        .icon-box {
+            width: 54px; height: 54px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem;
+        }
+        .icon-box.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .icon-box.red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .icon-box.green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .card-badge {
+            font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05); color: var(--text-sub); font-weight: 600;
+        }
+        .card h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .card p { color: var(--text-sub); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; }
+        .card-action { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.9rem; color: var(--primary); }
+        .card:hover .card-action svg { transform: translateX(4px); }
+        .card-action svg { transition: transform 0.2s; }
+        .system-info {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1.25rem;
+            padding: 1.75rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            backdrop-filter: blur(12px);
+        }
+        .info-item { display: flex; flex-direction: column; gap: 0.25rem; }
+        .info-label { font-size: 0.8rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .info-val { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
+        .token-box {
+            display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.3);
+            padding: 0.4rem 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: monospace; font-size: 0.85rem; color: #cbd5e1; cursor: pointer; transition: all 0.2s;
+        }
+        .token-box:hover { border-color: rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.5); }
+        footer { margin-top: 3rem; color: var(--text-sub); font-size: 0.85rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">
+                <span class="status-dot"></span>
+                <span>PacheKing Station Online</span>
+            </div>
+            <h1>PacheKing Hub</h1>
+            <p class="subtitle">Panel unificado de descargas, streaming y procesamiento automatizado a Google Drive</p>
+        </header>
+
+        <div class="grid">
+            <a href="https://eye-tucson-thread-assured.trycloudflare.com" target="_blank" class="card ariang">
+                <div>
+                    <div class="card-top">
+                        <div class="icon-box blue">⚡</div>
+                        <span class="card-badge">Aria2-Pro</span>
+                    </div>
+                    <h2>AriaNg</h2>
+                    <p>Gestor multihilo para descargas directas HTTP/FTP, BitTorrent y enlaces Magnet a máxima velocidad.</p>
+                </div>
+                <div class="card-action">
+                    Abrir AriaNg
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </div>
+            </a>
+
+            <a href="https://privacy-responsibilities-buttons-frankfurt.trycloudflare.com" target="_blank" class="card metube">
+                <div>
+                    <div class="card-top">
+                        <div class="icon-box red">🎬</div>
+                        <span class="card-badge">yt-dlp Engine</span>
+                    </div>
+                    <h2>MeTube</h2>
+                    <p>Descarga de videos en máxima resolución (4K/1080p) y extracción de audio MP3 de YouTube y redes sociales.</p>
+                </div>
+                <div class="card-action">
+                    Abrir MeTube
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </div>
+            </a>
+
+            <a href="https://leaving-velvet-period-mind.trycloudflare.com" target="_blank" class="card filebrowser">
+                <div>
+                    <div class="card-top">
+                        <div class="icon-box green">📁</div>
+                        <span class="card-badge">Web Explorer</span>
+                    </div>
+                    <h2>FileBrowser</h2>
+                    <p>Explorador de archivos, reproductor de video/música integrado y gestor del almacenamiento local.</p>
+                </div>
+                <div class="card-action">
+                    Abrir FileBrowser
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </div>
+            </a>
+        </div>
+
+        <div class="system-info">
+            <div class="info-item">
+                <span class="info-label">Instancia</span>
+                <span class="info-val">PacheKing (ARM64)</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Pipeline Automático</span>
+                <span class="info-val" style="color: var(--accent-green);">Auto-Unzip & GDrive Sync</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Aria2 RPC Secret</span>
+                <div class="token-box" onclick="navigator.clipboard.writeText(\x271d0d8b3a3a52f684e6740180b134d6d8\x27); alert(\x27Token copiado al portapapeles\x27);" title="Click para copiar">
+                    <span>1d0d8b3a...</span>
+                    <span>📋</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">FileBrowser Login</span>
+                <span class="info-val">admin / admin</span>
+            </div>
+        </div>
+
+        <footer>
+            PacheKing Autonomous Station &bull; Orquestado con Docker Compose &bull; Cloudflare Tunnel
+        </footer>
+    </div>
+</body>
+</html>
